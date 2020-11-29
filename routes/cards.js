@@ -5,7 +5,8 @@ const fsPromises = require('fs').promises;
 const pathToFile = path.join(__dirname, '..', 'data', 'cards.json');
 
 router.get('/cards', (req, res) => {
-  fsPromises.readFile(pathToFile, { encoding: 'utf8' })
+  fsPromises
+    .readFile(pathToFile, { encoding: 'utf8' })
     .then((cards) => {
       res.status(200).send(cards);
     })

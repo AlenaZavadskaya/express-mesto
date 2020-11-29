@@ -5,7 +5,8 @@ const fsPromises = require('fs').promises;
 const pathToFile = path.join(__dirname, '..', 'data', 'users.json');
 
 router.get('/users', (req, res) => {
-  fsPromises.readFile(pathToFile, { encoding: 'utf8' })
+  fsPromises
+    .readFile(pathToFile, { encoding: 'utf8' })
     .then((users) => {
       res.status(200).send(users);
     })
@@ -13,7 +14,8 @@ router.get('/users', (req, res) => {
 });
 
 router.get('/users/:id', (req, res) => {
-  fsPromises.readFile(pathToFile, { encoding: 'utf8' })
+  fsPromises
+    .readFile(pathToFile, { encoding: 'utf8' })
     .then((data) => {
       const { id } = req.params;
       const users = JSON.parse(data);
