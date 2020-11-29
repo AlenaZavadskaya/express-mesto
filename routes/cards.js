@@ -9,7 +9,7 @@ router.get('/cards', (req, res) => {
     .then((cards) => {
       res.status(200).send(cards);
     })
-    .catch(() => res.status(500).send({ message: 'Запрашиваемый ресурс не найден' }));
+    .catch(() => res.status(500).send({ message: 'Что-то пошло не так' }));
 });
 
 module.exports = router;
