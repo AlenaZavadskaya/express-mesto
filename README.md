@@ -6,6 +6,6 @@ This is an interactive page where you can add photos, delete them, and like. Thr
 
 The site is responsive, adapted for resolutions: 320px, 1280px.
 
-##Load a project##
-npm run start
-npm run dev
+## Load a project
+### npm run start
+### npm run dev
