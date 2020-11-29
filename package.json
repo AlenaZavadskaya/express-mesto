@@ -1,14 +1,16 @@
 {
+  "homepage": "http://AlenaZavadskaya.github.io/express-mesto",
   "name": "mesto-express",
   "version": "1.0.0",
-  "description": "",
+  "description": "backend of app Mesto",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "lint": "eslint ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Alena Zavadskaya",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
