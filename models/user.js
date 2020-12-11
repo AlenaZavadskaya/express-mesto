@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  id: {
+    type: String,
+  },
 });
 
 // создаём модель и экспортируем её
