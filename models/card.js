@@ -12,6 +12,13 @@ const cardSchema = new mongoose.Schema({
     required: true,
     minlength: 2,
     maxlength: 30,
+    validate: {
+      validator(v) {
+        // eslint-disable-next-line no-useless-escape
+        return !/https?:\/\/[www\.]?[a-zA-Z0-9\-._~:/?#[\]@!$&'()\*+,;=]{1,}\.ru[\S*]?/g.test(v);
+      },
+      message: 'Неверный URL',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -20,7 +27,7 @@ const cardSchema = new mongoose.Schema({
   },
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
-    default: [],
+    ref: 'user',
   }],
   createdAt: {
     type: Date,

@@ -16,9 +16,12 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
-  },
-  id: {
-    type: String,
+    // validate: {
+    //   validator(v) {
+    //     // eslint-disable-next-line no-useless-escape
+    //     return /https?:\/\/[www\.]?[a-zA-Z0-9\-._~:/?#[\]@!$&'()\*+,;=]{1,}\.ru[\S*]?/g.test(v);
+    //   },
+    // },
   },
 });
 
