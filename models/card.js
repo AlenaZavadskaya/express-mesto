@@ -15,7 +15,7 @@ const cardSchema = new mongoose.Schema({
     validate: {
       validator(v) {
         // eslint-disable-next-line no-useless-escape
-        return !/https?:\/\/[www\.]?[a-zA-Z0-9\-._~:/?#[\]@!$&'()\*+,;=]{1,}\.ru[\S*]?/g.test(v);
+        return /https?\:\/\/[www\.]?[a-zA-Z0-9\-._~:\/?#[\]@!$&'()\*+,;=]{1,}\.*/gm.test(v);
       },
       message: 'Неверный URL',
     },
@@ -25,10 +25,11 @@ const cardSchema = new mongoose.Schema({
     ref: 'user',
     required: true,
   },
-  likes: [{
-    type: mongoose.Schema.Types.ObjectId,
+  likes: {
+    type: Array,
     ref: 'user',
-  }],
+    default: [],
+  },
   createdAt: {
     type: Date,
     default: Date.now,
