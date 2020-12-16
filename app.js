@@ -8,7 +8,6 @@ const { PORT = 3000 } = process.env;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const path = require('path');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 
@@ -18,8 +17,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', usersRoutes);
 app.use('/', cardsRoutes);
