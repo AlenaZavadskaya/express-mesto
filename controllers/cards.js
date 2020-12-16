@@ -4,20 +4,33 @@ module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => {
-      res.status(200).send(cards);
+      if (!cards) {
+        return res.status(404).send({ message: 'Карточки не найдены' });
+      }
+      return res.status(200).send(cards);
     })
-    .catch(() => res.status(500).send({ message: 'Что-то пошло не так' }));
+    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
 module.exports.createCard = (req, res) => {
   const { name, link, owner } = req.body;
   Card.create({ name, link, owner })
     .then((card) => res.status(200).send({ card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `Ошибка валидации: ${err}` });
+      }
+      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
 };
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: 'Карточка не найдена' });
+      }
+      return res.status(200).send({ data: card });
+    })
+    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };

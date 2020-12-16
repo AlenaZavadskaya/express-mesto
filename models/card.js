@@ -17,7 +17,7 @@ const cardSchema = new mongoose.Schema({
         // eslint-disable-next-line no-useless-escape
         return /https?\:\/\/[www\.]?[a-zA-Z0-9\-._~:\/?#[\]@!$&'()\*+,;=]{1,}\.*/gm.test(v);
       },
-      message: 'Неверный URL',
+      message: (props) => `${props.value} is not a valid url!`,
     },
   },
   owner: {
