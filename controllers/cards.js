@@ -2,6 +2,7 @@ const Card = require('../models/card');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
+    .populate('owner')
     .then((cards) => {
       res.status(200).send(cards);
     })
@@ -9,21 +10,9 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.createCard = (req, res) => {
-  // console.log('Data in currentUser', req.body);
-  // return null;
-  // const owner = req.user._id;
-  // console.log(`id:${req.user._id}`);
-  // Card.create({ owner, ...req.body }) // создадим документ на основе пришедших данных
-  // const { name, link } = req.body;
-  // console.log('Data in currentUser', req.body);
-  // Card.create({ name, link })
-
-  const owner = req.body._id;
-  console.log({ owner, ...req.body });
-  return Card.create({ owner, ...req.body })
-  // вернём записанные в базу данные
-    .then((card) => res.status(200).send({ data: card }))
-  // данные не записались, вернём ошибку
+  const { name, link, owner } = req.body;
+  Card.create({ name, link, owner })
+    .then((card) => res.status(200).send({ card }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
