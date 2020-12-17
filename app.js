@@ -18,14 +18,14 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.use('/', usersRoutes);
-app.use('/', cardsRoutes);
 app.use((req, res, next) => {
   req.user = {
     _id: '5fd6788a14f9314d78ba95fb',
   };
   next();
 });
+app.use('/', usersRoutes);
+app.use('/', cardsRoutes);
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });

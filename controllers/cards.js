@@ -4,17 +4,14 @@ module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => {
-      if (!cards) {
-        return res.status(404).send({ message: 'Карточки не найдены' });
-      }
-      return res.status(200).send(cards);
+      res.status(200).send(cards);
     })
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
 module.exports.createCard = (req, res) => {
-  const { name, link, owner } = req.body;
-  Card.create({ name, link, owner })
+  const { name, link } = req.body;
+  Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {

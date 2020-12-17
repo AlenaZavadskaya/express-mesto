@@ -10,8 +10,6 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
     validate: {
       validator(v) {
         // eslint-disable-next-line no-useless-escape
@@ -25,11 +23,11 @@ const cardSchema = new mongoose.Schema({
     ref: 'user',
     required: true,
   },
-  likes: {
-    type: Array,
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     default: [],
-  },
+  }],
   createdAt: {
     type: Date,
     default: Date.now,
