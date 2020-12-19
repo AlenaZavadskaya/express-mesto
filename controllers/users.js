@@ -17,7 +17,7 @@ module.exports.getUserById = (req, res) => {
       return res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         res.status(400).send({ message: `Ошибка валидации: ${err}` });
       } else {
         res.status(500).send({ message: `Произошла ошибка: ${err}` });
@@ -31,7 +31,7 @@ module.exports.createUser = (req, res) => {
     .then((users) => res.status(200).send({ data: users }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректно указаны данные пользователя' });
+        res.status(400).send({ message: `Некорректно указаны данные пользователя: ${err}`  });
       } else {
         res.status(500).send({ message: `Произошла ошибка: ${err}` });
       }

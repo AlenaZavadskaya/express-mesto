@@ -17,8 +17,6 @@
           "_id"
         ]
       }
-    ],
-    "no-console": "off",
-    "linebreak-style": "off"
+    ]
   }
 }
