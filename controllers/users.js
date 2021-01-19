@@ -63,7 +63,15 @@ module.exports.createUser = (req, res, next) => {
         avatar,
       })
     )
-    .then((user) => res.status(200).send(user))
+    // .then((user) => res.status(200).send(user))
+    .then((user) => {
+      console.log(user);
+      User.findById(user._id).then((user) => res.status(200).send(user));
+    })
+    // .then((user) => {
+    //   const { _id, email } = user;
+    //   res.send({ data: { _id, email } })
+    // })
     .catch(next);
 };
 
