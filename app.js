@@ -1,6 +1,11 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+
+const { createUser, login } = require("./controllers/users");
+const auth = require("./middlewares/auth");
+const usersRoutes = require("./routes/users");
+const cardsRoutes = require("./routes/cards");
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -8,27 +13,31 @@ const { PORT = 3000 } = process.env;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const usersRoutes = require('./routes/users');
-const cardsRoutes = require('./routes/cards');
-
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect("mongodb://localhost:27017/mestodb", {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5fd6788a14f9314d78ba95fb',
-  };
-  next();
-});
-app.use('/', usersRoutes);
-app.use('/', cardsRoutes);
+app.use("/signin", login);
+app.use("/signup", createUser);
+app.use(auth);
+app.use("/", usersRoutes);
+app.use("/", cardsRoutes);
 
 app.use((req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+  res.status(404).send({ message: "Запрашиваемый ресурс не найден" });
+});
+
+app.use((err, req, res, next) => {
+  // если у ошибки нет статуса, выставляем 500
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).send({
+    // проверяем статус и выставляем сообщение в зависимости от него
+    message: statusCode === 500 ? "На сервере произошла ошибка" : message,
+  });
 });
 
 app.listen(PORT, () => {
