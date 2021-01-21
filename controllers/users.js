@@ -1,47 +1,37 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const NotFoundError = require("../errors/not-found-err");
+const BadRequestError = require("../errors/bad-request-err");
+const UnauthorizedError = require("../errors/unauthorized-err");
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.status(200).send({ data: users });
     })
-    .catch((err) =>
-      res.status(500).send({ message: `Произошла ошибка: ${err}` })
-    );
+    .catch(next);
 };
 
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   User.findById(req.params._id)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: "Нет пользователя с таким id" });
-      }
-      return res.status(200).send({ data: user });
-    })
+    .orFail(() => new NotFoundError("Нет пользователя с таким id"))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(400).send({ message: `Ошибка валидации: ${err}` });
-      } else {
-        res.status(500).send({ message: `Произошла ошибка: ${err}` });
+      if (err.kind === "ObjectId") {
+        throw new BadRequestError("Ошибка валидации: неверный id пользователя");
       }
-    });
+      return next(err);
+    })
+    .catch(next);
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => {
-      console.log("user", user);
-      res.status(200).send(user);
-    })
-    // .catch(next);
+    .orFail(() => new NotFoundError("Нет пользователя с таким id"))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(400).send({ message: `Ошибка валидации: ${err}` });
-      } else {
-        res.status(500).send({ message: `Произошла ошибка: ${err}` });
-      }
+      next(err);
     });
 };
 
@@ -50,7 +40,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        // throw new ConflictError('This user already exists');
+        throw new BadRequestError("Пользователь с данным email уже существует");
       }
       return bcrypt.hash(password, 10);
     })
@@ -63,9 +53,7 @@ module.exports.createUser = (req, res, next) => {
         avatar,
       })
     )
-    // .then((user) => res.status(200).send(user))
     .then((user) => {
-      console.log(user);
       User.findById(user._id).then((user) => res.status(200).send(user));
     })
     // .then((user) => {
@@ -75,21 +63,18 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      res.send({
+      res.status(200).send({
         token: jwt.sign({ _id: user._id }, "some-secret-key", {
           expiresIn: "7d",
         }),
       });
-      console.log("user", req.user);
-      console.log("user1", user);
     })
-    .catch((err) => {
-      // ошибка аутентификации
-      res.status(401).send({ message: err.message });
+    .catch(() => {
+      next(new UnauthorizedError("Неправильные почта или пароль"));
     });
 };
