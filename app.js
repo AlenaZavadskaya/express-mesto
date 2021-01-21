@@ -2,12 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const { errors } = require("celebrate");
+const cors = require('cors');
 
 const { createUser, login } = require("./controllers/users");
 const auth = require("./middlewares/auth");
 const usersRoutes = require("./routes/users");
 const cardsRoutes = require("./routes/cards");
 const { userLoginValidation, userRegisterValidation } = require("./middlewares/serverDataValidator");
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -22,24 +24,28 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
   useUnifiedTopology: true,
 });
 
+app.use(cors());
+
+app.use(requestLogger);
+
 app.use("/signin", userLoginValidation, login);
 app.use("/signup", userRegisterValidation, createUser);
 app.use(auth);
 app.use("/", usersRoutes);
 app.use("/", cardsRoutes);
 
-app.use(errors());
+app.use(errorLogger);
+
+app.use(errors()); // обработчик ошибок celebrate
 
 app.use((req, res) => {
   res.status(404).send({ message: "Запрашиваемый ресурс не найден" });
 });
 
-app.use((err, req, res, next) => {
-  // если у ошибки нет статуса, выставляем 500
+app.use((err, req, res, next) => { // централизованный обработчик ошибок
   const { status = 500, message } = err;
 
   res.status(status).send({
-    // проверяем статус и выставляем сообщение в зависимости от него
     message: status === 500 ? "На сервере произошла ошибка" : message,
   });
 });
