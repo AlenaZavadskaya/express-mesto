@@ -26,8 +26,8 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 
 // Массив разешённых доменов
 const allowedCors = [
-  'https://AlenaZavadskaya.students.nomoreparties.space',
-  'https://www.AlenaZavadskaya.students.nomoreparties.space',
+  'https://AlenaZavadskaya.students.nomoredomains.monster',
+  'https://www.AlenaZavadskaya.students.nomoredomains.monster',
   'localhost:3000'
 ];
 
