@@ -29,7 +29,9 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 const allowedCors = [
   'https://alenazavadskaya.students.nomoredomains.monster',
   'http://alenazavadskaya.students.nomoredomains.monster',
-  'http://localhost:3000/'
+  'https://www.alenazavadskaya.students.nomoredomains.monster',
+  'http://www.alenazavadskaya.students.nomoredomains.monster',
+  'http://localhost:3000'
 ];
 
 app.use(cors());
