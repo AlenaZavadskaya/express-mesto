@@ -4,6 +4,9 @@ const User = require("../models/user");
 const NotFoundError = require("../errors/not-found-err");
 const BadRequestError = require("../errors/bad-request-err");
 const UnauthorizedError = require("../errors/unauthorized-err");
+require('dotenv').config();
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -69,7 +72,9 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       res.status(200).send({
-        token: jwt.sign({ _id: user._id }, "some-secret-key", {
+        // token: jwt.sign({ _id: user._id }, "some-secret-key", {
+        //   expiresIn: "7d",
+        token: jwt.sign({ _id: user._id }, NODE_ENV === "production" ? JWT_SECRET : "some-secret-key", {
           expiresIn: "7d",
         }),
       });

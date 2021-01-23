@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const { errors } = require("celebrate");
 const cors = require('cors');
+require('dotenv').config();
 
 const { createUser, login } = require("./controllers/users");
 const auth = require("./middlewares/auth");
@@ -26,9 +27,9 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 
 // Массив разешённых доменов
 const allowedCors = [
-  'https://AlenaZavadskaya.students.nomoredomains.monster',
-  'https://www.AlenaZavadskaya.students.nomoredomains.monster',
-  'localhost:3000'
+  'https://alenazavadskaya.students.nomoredomains.monster',
+  'http://alenazavadskaya.students.nomoredomains.monster',
+  'http://localhost:3000/'
 ];
 
 app.use(cors());
@@ -42,6 +43,8 @@ app.use(function(req, res, next) {
 
   next();
 });
+
+app.options('*', cors());
 
 app.use(requestLogger);
 
