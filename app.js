@@ -26,33 +26,33 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 });
 
 // Массив разешённых доменов
-// const allowedCors = [
-//   'https://alenazavadskaya.students.nomoredomains.monster',
-//   'http://alenazavadskaya.students.nomoredomains.monster',
-//   'https://www.alenazavadskaya.students.nomoredomains.monster',
-//   'http://www.alenazavadskaya.students.nomoredomains.monster',
-//   'http://localhost:3000'
-// ];
+const allowedCors = [
+  'https://alenazavadskaya.students.nomoredomains.monster',
+  'http://alenazavadskaya.students.nomoredomains.monster',
+  'https://www.alenazavadskaya.students.nomoredomains.monster',
+  'http://www.alenazavadskaya.students.nomoredomains.monster',
+  'http://localhost:3000'
+];
 
 app.use(cors());
-
-// app.use(function(req, res, next) {
-//   const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
-
-//   if (allowedCors.includes(origin)) { // Проверяем, что значение origin есть среди разрешённых доменов
-//     res.header('Access-Control-Allow-Origin', origin);
-//   }
-
-//   next();
-// });
 
 app.use(function(req, res, next) {
   const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
 
+  if (allowedCors.includes(origin)) { // Проверяем, что значение origin есть среди разрешённых доменов
     res.header('Access-Control-Allow-Origin', origin);
+  }
 
   next();
 });
+
+// app.use(function(req, res, next) {
+//   const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
+
+//     res.header('Access-Control-Allow-Origin', origin);
+
+//   next();
+// });
 
 app.options('*', cors());
 
