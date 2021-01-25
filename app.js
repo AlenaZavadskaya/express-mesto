@@ -14,6 +14,7 @@ const {
   userRegisterValidation,
 } = require("./middlewares/serverDataValidator");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const NotFoundError = require("./errors/not-found-err");
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -68,10 +69,6 @@ app.use(errorLogger);
 
 app.use(errors()); // обработчик ошибок celebrate
 
-app.use((req, res) => {
-  res.status(404).send({ message: "Запрашиваемый ресурс не найден" });
-});
-
 app.use((err, req, res, next) => {
   // централизованный обработчик ошибок
   const { status = 500, message } = err;
@@ -79,6 +76,7 @@ app.use((err, req, res, next) => {
   res.status(status).send({
     message: status === 500 ? "На сервере произошла ошибка" : message,
   });
+  next(new NotFoundError("Запрашиваемый ресурс не найден"))
 });
 
 app.listen(PORT, () => {
