@@ -2,15 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const { errors } = require("celebrate");
-const cors = require('cors');
-require('dotenv').config();
+const cors = require("cors");
+require("dotenv").config();
 
 const { createUser, login } = require("./controllers/users");
 const auth = require("./middlewares/auth");
 const usersRoutes = require("./routes/users");
 const cardsRoutes = require("./routes/cards");
-const { userLoginValidation, userRegisterValidation } = require("./middlewares/serverDataValidator");
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+const {
+  userLoginValidation,
+  userRegisterValidation,
+} = require("./middlewares/serverDataValidator");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -25,38 +28,35 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
   useUnifiedTopology: true,
 });
 
-// Массив разешённых доменов
 const allowedCors = [
-  'https://alenazavadskaya.students.nomoredomains.monster',
-  'http://alenazavadskaya.students.nomoredomains.monster',
-  'https://www.alenazavadskaya.students.nomoredomains.monster',
-  'http://www.alenazavadskaya.students.nomoredomains.monster',
-  'http://localhost:3000'
+  "https://alenazavadskaya.students.nomoredomains.monster",
+  "http://alenazavadskaya.students.nomoredomains.monster",
+  "https://www.alenazavadskaya.students.nomoredomains.monster",
+  "http://www.alenazavadskaya.students.nomoredomains.monster",
+  "http://localhost:3000",
 ];
 
 app.use(cors());
 
-app.use(function(req, res, next) {
-  const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
+app.use(function (req, res, next) {
+  const { origin } = req.headers;
 
-  if (allowedCors.includes(origin)) { // Проверяем, что значение origin есть среди разрешённых доменов
-    res.header('Access-Control-Allow-Origin', origin);
+  if (allowedCors.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
   }
 
   next();
 });
 
-// app.use(function(req, res, next) {
-//   const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
-
-//     res.header('Access-Control-Allow-Origin', origin);
-
-//   next();
-// });
-
-app.options('*', cors());
+app.options("*", cors());
 
 app.use(requestLogger);
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Сервер сейчас упадёт");
+  }, 0);
+});
 
 app.use("/signin", userLoginValidation, login);
 app.use("/signup", userRegisterValidation, createUser);
@@ -72,7 +72,8 @@ app.use((req, res) => {
   res.status(404).send({ message: "Запрашиваемый ресурс не найден" });
 });
 
-app.use((err, req, res, next) => { // централизованный обработчик ошибок
+app.use((err, req, res, next) => {
+  // централизованный обработчик ошибок
   const { status = 500, message } = err;
 
   res.status(status).send({
