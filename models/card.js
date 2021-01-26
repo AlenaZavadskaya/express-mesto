@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     validate: {
       validator(v) {
         // eslint-disable-next-line no-useless-escape
-        return /https?\:\/\/[www\.]?[a-zA-Z0-9\-._~:\/?#[\]@!$&'()\*+,;=]{1,}\.*/gm.test(v);
+        return /https?\:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm.test(v);
       },
       message: (props) => `${props.value} is not a valid url!`,
     },
