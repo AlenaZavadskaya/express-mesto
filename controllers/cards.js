@@ -1,10 +1,10 @@
-const Card = require("../models/card");
-const NotFoundError = require("../errors/not-found-err");
-const BadRequestError = require("../errors/bad-request-err");
+const Card = require('../models/card');
+const NotFoundError = require('../errors/not-found-err');
+const BadRequestError = require('../errors/bad-request-err');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .populate("owner")
+    .populate('owner')
     .then((cards) => {
       res.status(200).send(cards);
     })
@@ -18,8 +18,9 @@ module.exports.createCard = (req, res, next) => {
       res.status(200).send({ card });
     })
     .catch((err) => {
-      if (err.name == "ValidationError") {
-        throw new BadRequestError("Ошибка валидации");
+      // eslint-disable-next-line eqeqeq
+      if (err.name == 'ValidationError') {
+        throw new BadRequestError('Ошибка валидации');
       }
       next(err);
     })
@@ -30,22 +31,24 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFoundError("Карточка не найдена");
+        throw new NotFoundError('Карточка не найдена');
+      // eslint-disable-next-line eqeqeq
       } else if (card.owner == req.user._id) {
         Card.findByIdAndRemove(req.params.cardId)
+          // eslint-disable-next-line no-shadow
           .then((card) => {
             res.status(200).send({ data: card });
           })
           .catch((error) => {
-            if (error.name === "CastError") {
-              throw new NotFoundError("Карточка не найдена");
+            if (error.name === 'CastError') {
+              throw new NotFoundError('Карточка не найдена');
             } else {
               next(error);
             }
           });
       } else {
         throw new BadRequestError(
-          "Вы не можете удалять карточки других пользователей"
+          'Вы не можете удалять карточки других пользователей',
         );
       }
     })
