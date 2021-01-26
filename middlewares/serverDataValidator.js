@@ -1,4 +1,4 @@
-const { Joi, celebrate } = require("celebrate");
+const { Joi, celebrate } = require('celebrate');
 
 const userRegisterValidation = celebrate({
   body: Joi.object().keys({
@@ -19,7 +19,7 @@ const userLoginValidation = celebrate({
 
 const userIdValidation = celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().required().length(24),
+    _id: Joi.string().required().hex().length(24),
   }),
 });
 
@@ -32,7 +32,7 @@ const cardValidation = celebrate({
 
 const cardIdValidation = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().length(24),
+    cardId: Joi.string().required().hex().length(24),
   }),
 });
 
