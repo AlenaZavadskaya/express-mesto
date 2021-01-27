@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const { createUser, login } = require('./controllers/users');
@@ -36,6 +37,8 @@ const allowedCors = [
   'http://www.alenazavadskaya.students.nomoredomains.monster',
   'http://localhost:3000',
 ];
+
+app.use(helmet());
 
 app.use(cors());
 
