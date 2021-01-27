@@ -4,7 +4,7 @@ const userRegisterValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().required().uri().custom((value, helper) => {
+    avatar: Joi.string().uri().custom((value, helper) => {
       // eslint-disable-next-line no-useless-escape
       const regExp = /https?\:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm;
       if (!value.match(regExp)) {
