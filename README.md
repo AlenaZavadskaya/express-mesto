@@ -10,7 +10,8 @@
 >*запустите сервер с hot-reload*<br/>
 > `npm run dev`
 
-### :link: Доступ к API осуществляется через URL: https://api.alenazavadskaya.students.nomoredomains.monster/
+### :link: Доступ к API осуществляется через URL: 
+https://api.alenazavadskaya.students.nomoredomains.monster/
 
 ### :key: Auth
 - POST /signup - создание пользователя с переданными данными: name, avatar, email, password
@@ -35,3 +36,4 @@
 
 ### :wrench: To do
 - вынести из файла app.js подключение роутов и централизованный обработчик ошибок
+- добавить лайки и удаление карточек
